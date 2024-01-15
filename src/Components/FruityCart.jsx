@@ -1,20 +1,23 @@
 import { useSelector } from 'react-redux'
-import ModalButton from './ModalButton'
+import ResetButton from './ResetButton'
 
 
-export default function FruityCart() {
+export default function FruityCart({ addOneFruitOrKg, removeOneFruitOrKg }) {
 
     const fruitsCart = useSelector(state => state.fruitsCart)
     let totalPrice = 0
 
     return (
-        <div className="bg-slate-100 rounded">
+        <div className="bg-cyan-200 text-slate-900 dark:bg-[#D1E0EB] dark:text-green-900 pb-4">
             {fruitsCart.cart.length > 0 &&
-                <h3 className="text-2xl p-5 border-b border-slate-400 text-center">Your Cart</h3>
+                <>
+                    <hr style={{ border: '2px solid green' }} />
+                    <h3 className="text-2xl p-5 border-green-900 text-green-900 text-center underline underline-offset-2 font-bold ">Your Cart :</h3>
+                </>
             }
-            <div className='w-full px-2 md:w-3/5 mx-auto'>
+            <div className='mx-auto border-2 w-[502px] border-black pt-1 px-4'>
                 <ul>
-                    {fruitsCart.cart.map((fruitsKind, index) => {
+                    {fruitsCart.cart.map((fruitsKind, index, array) => {
 
                         let priceByUnit = 0
                         if (fruitsKind.quantity > 0) {
@@ -32,36 +35,50 @@ export default function FruityCart() {
                             if (isNaN(priceByWeight)) { priceByWeight = 0 }
                             totalPrice += priceByWeight
                         }
-                        console.log(fruitsKind.weight);
-                        console.log(fruitsKind.quantity);
+
                         return (
-                            <ul key={index}>
+                            <ul key={index} className={index % 3 === 2 && index !== array.length - 1 ? "border-b border-grey" : ""}>
                                 {fruitsKind.weight > 0 &&
-                                    <li className="flex space-x-6">
-                                        <h6 className="flex-grow">{fruitsKind.name}</h6>
-                                        <p className="w-1/6">{fruitsKind.weight} {fruitsKind.weight === 1 ? 'Kg' : 'Kgs'}</p>
-                                        <p className="w-1/6">{fruitsKind.pricePerKg}€ / Kg</p>
-                                        <p className="w-1/6 text-right">{priceByWeight}€</p>
+                                    <li className="flex my-1">
+                                        <p className="w-[250px] overflow-x-auto whitespace-nowrap">{fruitsKind.name}</p>
+                                        <p className="w-[80px]">{fruitsKind.weight} {fruitsKind.weight === 1 ? 'Kg' : 'Kgs'}</p>
+                                        <p className="w-[80px]">{fruitsKind.pricePerKg}€/Kg</p>
+                                        <p className="text-right w-[80px]">{priceByWeight}€</p>
+                                        <div className="w-[80px] text-right">
+                                            <button onClick={() => removeOneFruitOrKg(fruitsKind, true)} className='bg-red-600 rounded px-2 mx-2'>-</button>
+                                            <button onClick={() => addOneFruitOrKg(fruitsKind, true)} className='bg-green-600 rounded px-2'>+</button>
+                                        </div>
                                     </li>
                                 }
                                 {fruitsKind.quantity > 0 &&
-                                    <li className="flex space-x-6">
-                                        <h6 className="flex-grow">{fruitsKind.name}</h6>
-                                        <p className="w-1/6">{fruitsKind.quantity} {fruitsKind.quantity === 1 ? 'unit' : 'units'}</p>
-                                        <p className="w-1/6">{fruitsKind.pricePerUnit}€ / unit</p>
-                                        <p className="w-1/6 text-right">{priceByUnit}€</p>
+                                    <li className="flex my-1">
+                                        <p className="w-[250px] overflow-x-auto whitespace-nowrap">{fruitsKind.name}</p>
+                                        <p className="w-[80px]">{fruitsKind.quantity} {fruitsKind.quantity === 1 ? 'unit' : 'units'}</p>
+                                        <p className="w-[80px]">{fruitsKind.pricePerUnit}€/unit</p>
+                                        <p className="text-right w-[80px]">{priceByUnit}€</p>
+                                        <div className="w-[80px] text-right">
+                                            <button onClick={() => removeOneFruitOrKg(fruitsKind, false)} className='bg-red-600 rounded px-2 mx-2'>-</button>
+                                            <button onClick={() => addOneFruitOrKg(fruitsKind, false)} className='bg-green-600 rounded px-2'>+</button>
+                                        </div>
                                     </li>
                                 }
                             </ul>
+
                         )
                     })}
                 </ul>
                 {totalPrice !== 0 ?
                     <>
-                        <p className="text-xl py-3 border-t border-slate-400 text-right">Total price : <strong>{totalPrice.toFixed(1).replace(/\./g, ',')}€</strong></p>
-                        <ModalButton />
-                    </> :
-                    <p className="text-xl py-3 text-center">Pick Your Fruits</p>
+                        <hr style={{ border: '1px dotted green', marginTop: '2px' }} />
+                        <div className="flex items-center justify-between">
+                            <ResetButton />
+                            <p className="text-xl py-3 text-right">
+                                Total price : <strong>{totalPrice.toFixed(1).replace(/\./g, ',')}€</strong>
+                            </p>
+                        </div>
+                    </>
+                    :
+                    <p className="text-xl pb-1 text-center">Pick Your Fruits</p>
                 }
             </div>
         </div>

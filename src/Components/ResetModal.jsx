@@ -3,7 +3,7 @@ import { resetCart } from "../features/fruitsCart"
 
 
 
-export default function ConfirmationModal({ setShowConfirmationModal, showConfirmationModal }) {
+export default function ResetModal({ setShowConfirmationModal, showConfirmationModal }) {
 
     const dispach = useDispatch()
 

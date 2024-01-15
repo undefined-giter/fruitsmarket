@@ -9,9 +9,9 @@ export const fruitsCart = createSlice({
     initialState,
     reducers: {
         addOne: (state, action) => {
-            const { payload } = action;
-            const byWeight = payload.byWeight;
-            const existingFruitIndex = state.cart.findIndex(fruit => fruit.id === payload.id);
+            const { payload } = action
+            const byWeight = payload.byWeight
+            const existingFruitIndex = state.cart.findIndex(fruit => fruit.id === payload.id)
 
             if (existingFruitIndex !== -1) {
                 if (byWeight) { state.cart[existingFruitIndex].weight += 1 }
@@ -22,38 +22,45 @@ export const fruitsCart = createSlice({
             }
         },
         removeOne: (state, action) => {
-            const { payload } = action;
-            const fruitKind = state.cart.find(fruit => fruit.name === payload.name);
+            const { payload } = action
+            const byWeight = payload.byWeight
+            const existingFruitIndex = state.cart.findIndex(fruit => fruit.id === payload.id);
 
-            if (fruitKind) {
-                if (fruitKind.quantity === 1) {
-                    state.cart = state.cart.filter(fruitK => fruitK.id !== payload.id)
-                }
-                else if (fruitKind.quantity > 1) {
-                    fruitKind.quantity--;
-                }
+            if (existingFruitIndex !== -1) {
+                if (byWeight & state.cart[existingFruitIndex].weight > 1) { state.cart[existingFruitIndex].weight -= 1 }
+                else if (!byWeight & state.cart[existingFruitIndex].quantity > 1) { state.cart[existingFruitIndex].quantity -= 1 }
+                else if ((byWeight & state.cart[existingFruitIndex].weight === 1 & state.cart[existingFruitIndex].quantity <= 0) || (!byWeight & state.cart[existingFruitIndex].quantity === 1 & state.cart[existingFruitIndex].weight <= 0)) { state.cart = state.cart.filter(fruitK => fruitK.id !== payload.id) }
+                else if (byWeight & state.cart[existingFruitIndex].weight === 1) { state.cart[existingFruitIndex].weight = 0 }
+                else if (!byWeight & state.cart[existingFruitIndex].quantity >= 1) { state.cart[existingFruitIndex].quantity -= 1 }
             }
         },
         addAmount: (state, action) => {
             const { payload } = action
+            const byWeight = payload.byWeight
             const inputAmount = payload.amount[payload.id]
-            const fruitKind = state.cart.find(fruit => fruit.id === payload.id)
+            const existingFruitIndex = state.cart.findIndex(fruit => fruit.id === payload.id);
+
             if (isNaN(inputAmount)) { return; }
-            if (fruitKind) { fruitKind.quantity += inputAmount }
-            else { state.cart.push({ ...payload, quantity: inputAmount }) }
+            if (existingFruitIndex !== -1) {
+                if (byWeight) { state.cart[existingFruitIndex].weight += inputAmount }
+                else { state.cart[existingFruitIndex].quantity += inputAmount }
+            } else {
+                if (byWeight) { state.cart.push({ ...payload, weight: inputAmount, quantity: 0 }) }
+                else { state.cart.push({ ...payload, quantity: inputAmount, weight: 0 }) }
+            }
         },
         removeAmount: (state, action) => {
             const { payload } = action
+            const byWeight = payload.byWeight
             const inputAmount = payload.amount[payload.id]
-            const fruitKind = state.cart.find(fruit => fruit.name === payload.name);
-            if (!inputAmount) { return; }
-            if (fruitKind) {
-                if (fruitKind.quantity > inputAmount) {
-                    fruitKind.quantity -= inputAmount;
-                }
-                else {
-                    state.cart = state.cart.filter(fruitK => fruitK.id !== payload.id)
-                }
+            const existingFruitIndex = state.cart.findIndex(fruit => fruit.id === payload.id);
+
+            if (existingFruitIndex !== -1) {
+                if (byWeight & state.cart[existingFruitIndex].weight > inputAmount) { state.cart[existingFruitIndex].weight -= inputAmount }
+                else if (!byWeight & state.cart[existingFruitIndex].quantity > inputAmount) { state.cart[existingFruitIndex].quantity -= inputAmount }
+                else if ((byWeight & state.cart[existingFruitIndex].weight <= inputAmount & state.cart[existingFruitIndex].quantity <= 0) || (!byWeight & state.cart[existingFruitIndex].quantity <= inputAmount & state.cart[existingFruitIndex].weight <= 0)) { state.cart = state.cart.filter(fruitK => fruitK.id !== payload.id) }
+                else if (byWeight & state.cart[existingFruitIndex].weight <= inputAmount) { state.cart[existingFruitIndex].weight = 0 }
+                else if (!byWeight & state.cart[existingFruitIndex].quantity <= inputAmount) { state.cart[existingFruitIndex].quantity = 0 }
             }
         },
         reset: (state, action) => {
