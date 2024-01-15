@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import SearchBar from './searchBar';
 import FruityCart from './FruityCart'
 import { addOne, removeOne, addAmount, removeAmount, reset } from "../features/fruitsCart"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 
 export default function Fruity() {
@@ -11,6 +11,15 @@ export default function Fruity() {
     const dispatch = useDispatch()
     const [amount, setAmount] = useState({})
     const [searchFruit, setSearchFruit] = useState('')
+    const [byWeight, setByWeight] = useState({})
+
+    useEffect(() => {
+        const initialByWeight = fruitsList.list.reduce((acc, fruit) => {
+            acc[fruit.id] = true
+            return acc;
+        }, {});
+        setByWeight(initialByWeight);
+    }, [fruitsList.list]);
 
     const handleInputChange = (fruitId, value) => {
         const inputValue = parseInt(value, 10);
@@ -29,6 +38,10 @@ export default function Fruity() {
         fruit.name.toLowerCase().includes(searchFruit.toLowerCase())
     );
 
+    const resetInput = (fruitId) => {
+        setAmount((prevState) => ({ ...prevState, [fruitId]: 0 }))
+    }
+
 
 
     return (
@@ -41,23 +54,27 @@ export default function Fruity() {
                     <li key={fruit.id} className='bg-slate-100 p-4 rounded mb-4' style={{ minWidth: '300px' }}>
                         <img src={fruit.url} className='w-full h-[250px] object-cover mb-1' alt={fruit.name} />
 
-                        <div className='flex justify-between mb-4 items-baseline'>
+                        <div className='flex justify-between items-baseline'>
                             <p className='text-2xl mb-2 font-semibold overflow-hidden' style={{ whiteSpace: 'nowrap', overflow: 'auto', maxWidth: '100%' }}>{fruit.name}</p>
 
-                            <p className='text-lg font-semibold ml-2'>{fruit.pricePerUnit}€/unit</p>
+                            <p className='text-lg mb-6 font-semibold ml-2'>{byWeight[fruit.id] ? fruit.pricePerKg : fruit.pricePerUnit}€/
+                                <button
+                                    onClick={() => setByWeight((prevByWeight) => ({ ...prevByWeight, [fruit.id]: !prevByWeight[fruit.id] }))}>{byWeight[fruit.id] ? 'Kg' : 'unit'}
+                                </button>
+                            </p>
                         </div>
                         <div className=''>
                             <div className='flex px-2'>
                                 <button
                                     className='w-full w-70 mr-4 bg-green-600 hover:bg-green-500 text-slate-100 p-1 rounded text-lg'
-                                    onClick={() => dispatch(addOne({ name: fruit.name, id: fruit.id, pricePerUnit: fruit.pricePerUnit, pricePerKg: fruit.pricePerKg }))}
-                                >Add one</button>
+                                    onClick={() => dispatch(addOne({ name: fruit.name, id: fruit.id, pricePerUnit: fruit.pricePerUnit, pricePerKg: fruit.pricePerKg, byWeight: byWeight[fruit.id] }))}
+                                >Add one {byWeight[fruit.id] ? 'Kg' : fruit.name.slice(0, -1)}</button>
                                 <button
                                     className='w-20 bg-red-600 hover:bg-red-500 text-slate-100 p-1 rounded text-lg m-auto'
                                     onClick={() => dispatch(removeOne({ name: fruit.name, id: fruit.id, pricePerUnit: fruit.pricePerUnit, pricePerKg: fruit.pricePerKg }))}
-                                >Remove one</button>
+                                >Remove one {byWeight[fruit.id] && 'Kg'}</button>
                             </div>
-                            <div className='flex py-3 leading-3'>
+                            <div className='flex pt-2 leading-3'>
                                 <input
                                     type="number"
                                     pattern="[0-9]"
@@ -65,10 +82,12 @@ export default function Fruity() {
                                     onChange={(e) => handleInputChange(fruit.id, e.target.value)}
                                     className='w-16 text-slate-100 p-1 rounded text-2xl ml-2'
                                     max='250'
+                                    id={`amountInput-${fruit.id}`}
                                 />
                                 <button
                                     className='min-w-16 bg-green-600 hover:bg-green-500 text-slate-100 p-1 min-m-1 rounded text-lg ml-2'
                                     onClick={() => dispatch(addAmount({ name: fruit.name, id: fruit.id, pricePerUnit: fruit.pricePerUnit, amount: amount, pricePerKg: fruit.pricePerKg }))}
+                                    id='addAmount'
                                 >+ {amount[fruit.id] || 0}</button>
                                 <button
                                     className='min-w-16 bg-red-600 hover:bg-red-500 text-slate-100 p-1 rounded text-lg ml-2'
@@ -76,7 +95,7 @@ export default function Fruity() {
                                 >- {amount[fruit.id] || 0}</button>
                                 <button
                                     className='h-10 w-15 bg-cyan-600 hover:bg-cyan-500 text-slate-100 p-1 rounded text-lg ml-auto mr-2'
-                                    onClick={() => dispatch(reset({ name: fruit.name, id: fruit.id, pricePerUnit: fruit.pricePerUnit, pricePerKg: fruit.pricePerKg }))}
+                                    onClick={() => { dispatch(reset({ name: fruit.name, id: fruit.id, pricePerUnit: fruit.pricePerUnit, pricePerKg: fruit.pricePerKg })); resetInput(fruit.id) }}
                                 >Reset</button>
                             </div>
                         </div>

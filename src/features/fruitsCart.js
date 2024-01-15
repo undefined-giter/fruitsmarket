@@ -9,11 +9,17 @@ export const fruitsCart = createSlice({
     initialState,
     reducers: {
         addOne: (state, action) => {
-            const { payload } = action
-            const existingFruit = state.cart.find(fruit => fruit.id === payload.id)
+            const { payload } = action;
+            const byWeight = payload.byWeight;
+            const existingFruitIndex = state.cart.findIndex(fruit => fruit.id === payload.id);
 
-            if (existingFruit) { existingFruit.quantity++ }
-            else { state.cart.push({ ...payload, quantity: 1 }) }
+            if (existingFruitIndex !== -1) {
+                if (byWeight) { state.cart[existingFruitIndex].weight += 1 }
+                else { state.cart[existingFruitIndex].quantity += 1 }
+            } else {
+                if (byWeight) { state.cart.push({ ...payload, weight: 1, quantity: 0 }) }
+                else { state.cart.push({ ...payload, quantity: 1, weight: 0 }) }
+            }
         },
         removeOne: (state, action) => {
             const { payload } = action;
