@@ -52,9 +52,12 @@ export const fruitsCart = createSlice({
         },
         reset: (state, action) => {
             state.cart = state.cart.filter(fruitK => fruitK.id !== action.payload.id)
+        },
+        resetCart: (state) => {
+            return { ...state, cart: [] }
         }
     }
 })
 
-export const { addOne, removeOne, addAmount, removeAmount, reset } = fruitsCart.actions
+export const { addOne, removeOne, addAmount, removeAmount, reset, resetCart } = fruitsCart.actions
 export default fruitsCart.reducer

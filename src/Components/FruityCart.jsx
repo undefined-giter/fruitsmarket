@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux'
+import ModalButton from './ModalButton'
 
 
 export default function FruityCart() {
@@ -8,7 +9,9 @@ export default function FruityCart() {
 
     return (
         <div className="bg-slate-100 rounded">
-            <p className="text-2xl p-5 border-b border-slate-400 text-center">Your cart</p>
+            {fruitsCart.cart.length > 0 &&
+                <h3 className="text-2xl p-5 border-b border-slate-400 text-center">Your Cart</h3>
+            }
             <div className='w-full sm:px-2 md:w-3/5 mx-auto'>
                 <ul>
                     {fruitsCart.cart.map((fruitsKind, index) => {
@@ -27,7 +30,10 @@ export default function FruityCart() {
                     })}
                 </ul>
                 {totalPrice !== 0 ?
-                    <p className="text-xl py-3 border-t border-slate-400 text-right">Total price : <strong>{parseFloat(totalPrice.toFixed(1))}€</strong></p> :
+                    <>
+                        <p className="text-xl py-3 border-t border-slate-400 text-right">Total price : <strong>{parseFloat(totalPrice.toFixed(1))}€</strong></p>
+                        <ModalButton />
+                    </> :
                     <p className="text-xl py-3 text-center">Pick Your Fruits</p>
                 }
             </div>
