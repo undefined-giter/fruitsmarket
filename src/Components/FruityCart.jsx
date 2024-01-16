@@ -8,14 +8,14 @@ export default function FruityCart({ addOneFruitOrKg, removeOneFruitOrKg }) {
     let totalPrice = 0
 
     return (
-        <div className="bg-cyan-200 text-slate-900 dark:bg-[#D1E0EB] dark:text-green-900 pb-4">
+        <div className="cursor-default bg-cyan-200 text-green-900 dark:bg-[#115e59] dark:text-green-900 pb-4">
             {fruitsCart.cart.length > 0 &&
                 <>
                     <hr style={{ border: '2px solid green' }} />
                     <h3 className="text-2xl p-5 border-green-900 text-green-900 text-center underline underline-offset-2 font-bold ">Your Cart :</h3>
                 </>
             }
-            <div className='mx-auto border-2 w-[502px] border-black pt-1 px-4'>
+            <div className='bg-cyan-300 dark:bg-cyan-800 dark:text-green-300 mx-auto border-2 w-[502px] border-black pt-1 px-4'>
                 <ul>
                     {fruitsCart.cart.map((fruitsKind, index, array) => {
 
@@ -37,7 +37,7 @@ export default function FruityCart({ addOneFruitOrKg, removeOneFruitOrKg }) {
                         }
 
                         return (
-                            <ul key={index} className={index % 3 === 2 && index !== array.length - 1 ? "border-b border-grey" : ""}>
+                            <ul key={index} className={index % 3 === 2 && index !== array.length - 1 ? "border-b" : ""}>
                                 {fruitsKind.weight > 0 &&
                                     <li className="flex my-1">
                                         <p className="w-[250px] overflow-x-auto whitespace-nowrap">{fruitsKind.name}</p>
@@ -78,7 +78,7 @@ export default function FruityCart({ addOneFruitOrKg, removeOneFruitOrKg }) {
                         </div>
                     </>
                     :
-                    <p className="text-xl pb-1 text-center">Pick Your Fruits</p>
+                    <p className="text-xl pb-1 text-center dark:text-green-300">Pick Your Fruits</p>
                 }
             </div>
         </div>
