@@ -54,8 +54,8 @@ export default function Fruity() {
 
 
     return (
-        <div className="bg-cyan-200 text-green-900 dark:bg-[#115e59] dark:text-green-300">
-            <h1 className="cursor-default text-4xl text-green-900 dark:text-cyan-200 font-bold text-center mb-1">Fruits & Vegetables</h1>
+        <div className="bg-cyan-200 text-green-900 dark:bg-[#115e59] dark:text-slate-200">
+            <h1 className="cursor-default text-4xl dark:text-cyan-200 font-bold text-center mb-1">Fruits & Vegetables</h1>
             <div className="md:absolute md:right-1 md:-top-2 mt-2 mr-1 flex justify-end">
                 <SearchBar searchFruit={searchFruit} onSearchFruit={handleSearchFruit} />
             </div>
@@ -66,9 +66,9 @@ export default function Fruity() {
                         <img src={fruit.url} className='w-full h-[250px] object-cover mb-1 rounded-xl' alt={fruit.name} />
 
                         <div className='flex justify-between items-baseline'>
-                            <p className='cursor-default text-2xl ml-1 font-semibold overflow-hidden' style={{ whiteSpace: 'nowrap', overflow: 'auto', maxWidth: '68%' }}>{fruit.name}</p>
+                            <p className='cursor-default text-2xl ml-1 font-semibold overflow-hidden text-green-900 dark:text-green-200' style={{ whiteSpace: 'nowrap', overflow: 'auto', maxWidth: '68%' }}>{fruit.name}</p>
 
-                            <p className='cursor-default text-lg mb-6 font-semibold mr-1'>{byWeight[fruit.id] ? fruit.pricePerKg : fruit.pricePerUnit}€/
+                            <p className='cursor-default text-lg mb-6 font-semibold mr-1 dark:text-green-200'>{byWeight[fruit.id] ? fruit.pricePerKg : fruit.pricePerUnit}€/
                                 <button
                                     onClick={() => setByWeight((prevByWeight) => ({ ...prevByWeight, [fruit.id]: !prevByWeight[fruit.id] }))}>
                                     <p className={`${byWeight[fruit.id] ? 'text-[#7D1C02]' : 'text-red-600'}`}>
@@ -79,11 +79,11 @@ export default function Fruity() {
                         </div>
                         <div className='flex px-2'>
                             <button
-                                className='w-full w-70 mr-4 bg-green-600 hover:bg-green-500 text-slate-100 p-1 rounded text-lg'
+                                className='w-full w-70 mr-4 bg-green-600 hover:bg-green-500 text-slate-200 p-1 rounded text-lg'
                                 onClick={() => addOneFruitOrKg(fruit, byWeight[fruit.id])}
                             >Add one {byWeight[fruit.id] ? 'Kg' : fruit.name.slice(0, -1)}</button>
                             <button
-                                className='w-20 bg-red-600 hover:bg-red-500 text-green-300 p-1 rounded text-lg m-auto'
+                                className='w-20 bg-red-600 hover:bg-red-500 text-slate-200 p-1 rounded text-lg m-auto'
                                 onClick={() => dispatch(removeOneFruitOrKg(fruit, byWeight[fruit.id]))}
                             >Remove one {byWeight[fruit.id] && 'Kg'}</button>
                         </div>
@@ -93,12 +93,12 @@ export default function Fruity() {
                                 pattern="[0-9]"
                                 value={amount[fruit.id] || ''}
                                 onChange={(e) => handleInputChange(fruit.id, e.target.value)}
-                                className='w-16 text-slate-900 p-1 rounded text-2xl ml-2 bg-cyan-200'
+                                className='w-16 cursor-pointer p-1 rounded text-2xl ml-2 bg-cyan-600 dark:bg-cyan-500 text-slate-200'
                                 max='250'
                                 id={`amountInput-${fruit.id}`}
                             />
                             <button
-                                className='min-w-16 bg-green-600 hover:bg-green-500 text-green-300 p-1 min-m-1 rounded text-lg ml-1'
+                                className='min-w-16 bg-green-600  hover:bg-green-500 text-slate-200 p-1 min-m-1 rounded text-lg ml-1'
                                 onClick={() => dispatch(addAmount({ name: fruit.name, id: fruit.id, pricePerUnit: fruit.pricePerUnit, amount: amount, pricePerKg: fruit.pricePerKg, byWeight: byWeight[fruit.id] }))}
                                 id='addAmount'
                             >+ {amount[fruit.id] || 0}</button>
@@ -107,7 +107,7 @@ export default function Fruity() {
                                 onClick={() => dispatch(removeAmount({ name: fruit.name, id: fruit.id, pricePerUnit: fruit.pricePerUnit, amount: amount, pricePerKg: fruit.pricePerKg, byWeight: byWeight[fruit.id] }))}
                             >- {amount[fruit.id] || 0}</button>
                             <button
-                                className='h-10 w-15 bg-cyan-700 hover:bg-cyan-600 text-green-300 p-1 rounded text-lg ml-auto mr-2 dark:bg-cyan-800 dark:hover:bg-cyan-600'
+                                className='h-10 w-15 bg-cyan-600 hover:bg-cyan-500 hover:border text-slate-200  p-1 rounded text-lg ml-auto mr-2 dark:bg-cyan-800 dark:hover:bg-cyan-600'
                                 onClick={() => { dispatch(reset({ name: fruit.name, id: fruit.id, pricePerUnit: fruit.pricePerUnit, pricePerKg: fruit.pricePerKg })); resetInput(fruit.id) }}
                             >Reset</button>
                         </div>
