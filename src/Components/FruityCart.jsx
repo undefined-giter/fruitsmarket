@@ -12,7 +12,7 @@ export default function FruityCart({ addOneFruitOrKg, removeOneFruitOrKg }) {
             {fruitsCart.cart.length > 0 &&
                 <>
                     <hr style={{ border: '2px solid green' }} />
-                    <h3 className="text-2xl p-5 border-green-900 text-green-900 text-center underline underline-offset-2 font-bold ">Your Cart :</h3>
+                    <h3 className="text-2xl p-5 border-green-900 text-green-900 text-center underline underline-offset-2 dark:text-cyan-200 font-bold ">Your Cart :</h3>
                 </>
             }
             <div className='bg-cyan-300 dark:bg-cyan-800 dark:text-slate-200 mx-auto border-2 w-[502px] border-black pt-1 px-4'>
